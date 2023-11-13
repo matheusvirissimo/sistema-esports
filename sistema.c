@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-#define MAX_PLAYERS 30
+#define MIN_PLAYERS 30
 
 struct Player {
     char nome[100];
@@ -16,39 +16,45 @@ struct Player {
 };
 
 void cadastrarJogador(struct Player jogadores[], int *numJogadores) {
-    if (*numJogadores < MAX_PLAYERS) {
-        struct Player jogador;
-        printf("Nome: ");
-        scanf("%s", jogador.nome);
-        printf("Data de Nascimento (dd/mm/yyyy): ");
-        scanf("%s", jogador.data_nascimento);
-        printf("CPF (11 dígitos): ");
-        scanf("%s", jogador.cpf);
-        printf("Gênero: ");
-        scanf("%s", jogador.genero);
-        printf("Estado Civil: ");
-        scanf("%s", jogador.estado_civil);
-        printf("Nome da Equipe: ");
-        scanf("%s", jogador.equipe_nome);
-        printf("Username da Rede Social: ");
-        scanf("%s", jogador.rede_social_username);
-        printf("Número de Seguidores na Rede Social: ");
-        scanf("%d", &jogador.seguidores_rede_social);
-
-        jogadores[*numJogadores] = jogador;
-        (*numJogadores)++;
-
-        printf("\nJogador cadastrado com sucesso!\n");
-    } else {
-        printf("\nLimite de jogadores atingido.\n");
-    }
+        for(int i = 0; i < *numJogadores; i++){
+            printf("Nome do jogador: ");
+            fflush(stdin);
+            gets(jogadores[i].nome);
+            fflush(stdin);
+            printf("Digite a sua idade de nascimento\n(dd/mm/aaaa): ");
+            fflush(stdin);
+            gets(jogadores[i].data_nascimento);
+            fflush(stdin);
+            printf("CPF (11 digitos): ");
+            scanf("%d", &jogadores[i].cpf);
+            printf("Genero: ");
+            fflush(stdin);
+            gets(jogadores[i].genero);
+            fflush(stdin);
+            printf("Estado civil: ");
+            fflush(stdin);
+            gets(jogadores[i].estado_civil);
+            fflush(stdin);
+            printf("Nome da equipe: ");
+            fflush(stdin);
+            gets(jogadores[i].equipe_nome);
+            fflush(stdin);
+            printf("Nome de usuario da rede social: ");
+            fflush(stdin);
+            gets(jogadores[i].rede_social_username);
+            fflush(stdin);
+            printf("Digite a quantidade de seguidores nas redes sociais do jogador: ");
+            scanf("%d", &jogadores[i].seguidores_rede_social);
+            printf("\nO %d jogador foi cadastrado\n\n");
+        }
+    printf("Foram cadastrados %d jogadores!", numJogadores);
 }
 
 void listarJogadores(struct Player jogadores[], int numJogadores) {
     if (numJogadores > 0) {
         printf("Lista de Jogadores:\n");
         for (int i = 0; i < numJogadores; i++) {
-            printf("Jogador %d:\n", i + 1);
+            printf("%d Jogador:\n", i + 1);
             printf("Nome: %s\n", jogadores[i].nome);
             printf("Data de Nascimento: %s\n", jogadores[i].data_nascimento);
             printf("CPF: %s\n", jogadores[i].cpf);
@@ -80,18 +86,24 @@ void removerJogador(struct Player jogadores[], int *numJogadores, char cpf[]) {
 
 int main() {
     setlocale(LC_ALL, "Portuguese");
-    struct Player jogadores[MAX_PLAYERS];
     int numJogadores = 0;
     int opcao;
     char cpf[12];
-
+    printf("\n\tSistema de competicao de E-Sports\n\n");
+    printf("Digite a quantidade de jogadores\n(DEVE SER MAIOR que 30: ");
+    scanf("%d", &numJogadores);
+        do{
+            printf("A quantidade de jogadores deve ser maior que 30!");
+            printf("\nDigite novamente a quantidade: ");
+            scanf("%d", &numJogadores);
+        }while(numJogadores < MIN_PLAYERS);
+    struct Player jogadores[numJogadores];
     while (1) {
-        printf("\nSistema de competição de E-Sports\n");
         printf("\n1. Cadastrar jogador\n");
         printf("2. Listar jogadores\n");
         printf("3. Remover jogador\n");
-        printf("4. Sair\n");
-        printf("\nEscolha a opção: ");
+        printf("4. Sair\n\n");
+        printf("Escolha a opção: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
