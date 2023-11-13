@@ -8,5 +8,5 @@ buscaRank()
 
 
 int main (){
-
+    printf("teste");
 }
