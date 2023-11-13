@@ -4,6 +4,27 @@
 #include <locale.h>
 #define MIN_PLAYERS 30
 
+struct EQUIPE{
+    char nome[50];
+    char nickname_redeSocial[20];
+    int seguidores;
+};
+
+struct CAMPEONATO{
+    int pontuacao;
+    int vitorias;
+    int derrotas;
+    int empates;
+};
+
+struct HARDWARE{
+    char modeloMaquinario[30];
+    char processador[20];
+    char placaDeVideo[20];
+    int memoriaRAM;
+};
+
+
 struct Player {
     char nome[100];
     char data_nascimento[11];
