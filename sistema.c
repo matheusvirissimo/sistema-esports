@@ -4,28 +4,28 @@
 #include <locale.h>
 #define MIN_PLAYERS 30
 
-struct EQUIPE{
+typedef struct equipe{
     char nome[50];
     char nickname_redeSocial[20];
     int seguidores;
-};
+} EQUIPE;
 
-struct CAMPEONATO{
+typedef struct campeonato{
     int pontuacao;
     int vitorias;
     int derrotas;
     int empates;
-};
+} CAMPEONATO;
 
-struct HARDWARE{
+typedef struct hardware{
     char modeloMaquinario[30];
     char processador[20];
     char placaDeVideo[20];
     int memoriaRAM;
-};
+} HARDWARE;
 
 
-struct Player {
+typedef struct Player{
     char nome[100];
     char data_nascimento[11];
     char cpf[12];
@@ -34,9 +34,9 @@ struct Player {
     char equipe_nome[50];
     char rede_social_username[50];
     int seguidores_rede_social;
-};
+} PLAYER;
 
-void cadastrarJogador(struct Player jogadores[], int *numJogadores) {
+void cadastrarJogador(PLAYER jogadores[], int *numJogadores) {
         for(int i = 0; i < *numJogadores; i++){
             printf("Nome do jogador: ");
             fflush(stdin);
@@ -69,6 +69,17 @@ void cadastrarJogador(struct Player jogadores[], int *numJogadores) {
             printf("\nO %d jogador foi cadastrado\n\n");
         }
     printf("Foram cadastrados %d jogadores!", numJogadores);
+}
+
+void escreverCadastroJogador(PLAYER jogadores[], int numJogadores){
+    FILE *file;
+    file = fopen("sistema.dat", "wb");
+    if(file == NULL){
+        printf("O arquivo nao foi aberto :(");
+    }
+    int qtdRegistros = fwrite(jogadores, sizeof(PLAYER), numJogadores, file);
+    printf("\nForam inscritos %d jogadores!\n", qtdRegistros);
+    fclose(file);
 }
 
 void listarJogadores(struct Player jogadores[], int numJogadores) {
@@ -106,7 +117,6 @@ void removerJogador(struct Player jogadores[], int *numJogadores, char cpf[]) {
 }
 
 int main() {
-    setlocale(LC_ALL, "Portuguese");
     int numJogadores = 0;
     int opcao;
     char cpf[12];
