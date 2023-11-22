@@ -82,7 +82,7 @@ void escreverCadastroJogador(PLAYER jogadores[], int numJogadores){
     fclose(file);
 }
 
-void listarJogadores(struct Player jogadores[], int numJogadores) {
+void listarJogadores(PLAYER jogadores[], int numJogadores) {
     if (numJogadores > 0) {
         printf("Lista de Jogadores:\n");
         for (int i = 0; i < numJogadores; i++) {
@@ -102,7 +102,7 @@ void listarJogadores(struct Player jogadores[], int numJogadores) {
     }
 }
 
-void removerJogador(struct Player jogadores[], int *numJogadores, char cpf[]) {
+void removerJogador(PLAYER jogadores[], int *numJogadores, char cpf[]) {
     for (int i = 0; i < *numJogadores; i++) {
         if (strcmp(jogadores[i].cpf, cpf) == 0) {
             for (int j = i; j < *numJogadores - 1; j++) {
@@ -128,7 +128,7 @@ int main() {
             printf("\nDigite novamente a quantidade: ");
             scanf("%d", &numJogadores);
         }while(numJogadores < MIN_PLAYERS);
-    struct Player jogadores[numJogadores];
+    PLAYER jogadores[numJogadores];
     while (1) {
         printf("\n1. Cadastrar jogador\n");
         printf("2. Listar jogadores\n");
