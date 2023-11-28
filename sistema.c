@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-#define MIN_PLAYERS 30
+#define MAX_PLAYERS 50
 
 typedef struct equipe{
     char nome[50];
-    char nickname_redeSocial[20];
+    char nicknameRedeSocial[20];
     int seguidores;
 } EQUIPE;
 
@@ -24,51 +24,131 @@ typedef struct hardware{
     int memoriaRAM;
 } HARDWARE;
 
+typedef struct data{
+    int dia;
+    int mes;
+    int ano;
+}DATA;
+
+typedef enum genero {masculino, feminino, prefiroNaoDizer} GENERO;
+typedef enum estado_civil {solteiro, divorciado, casado, viuvo, separado} estadoCivil;
 
 typedef struct Player{
     char nome[100];
-    char data_nascimento[11];
+    DATA dataNascimento;
     char cpf[12];
-    char genero[20];
-    char estado_civil[20];
-    char equipe_nome[50];
+    GENERO genero[20];
+    estadoCivil estado_civil[15];
+    EQUIPE equipe;
+    char patrocinador[30];
     char rede_social_username[50];
     int seguidores_rede_social;
+    HARDWARE hardware;
+    CAMPEONATO campeonato;
+    int titulos;
+    int posicaoRank;
 } PLAYER;
 
 void cadastrarJogador(PLAYER jogadores[], int *numJogadores) {
+    int cont = 0;
         for(int i = 0; i < *numJogadores; i++){
+            // Nome
             printf("Nome do jogador: ");
             fflush(stdin);
             gets(jogadores[i].nome);
             fflush(stdin);
-            printf("Digite a sua idade de nascimento\n(dd/mm/aaaa): ");
+
+            // Data de nascimento
+            printf("Digite a sua data de nascimento\n ");
+            printf("O dia: ");
             fflush(stdin);
-            gets(jogadores[i].data_nascimento);
+            gets(jogadores[i].dataNascimento.dia);
             fflush(stdin);
+            gets(jogadores[i].dataNascimento.mes);
+            fflush(stdin);
+            gets(jogadores[i].dataNascimento.ano);
+            fflush(stdin);
+
+            // CPF
             printf("CPF (11 digitos): ");
             scanf("%d", &jogadores[i].cpf);
+
+            // Genero
             printf("Genero: ");
             fflush(stdin);
             gets(jogadores[i].genero);
             fflush(stdin);
+
+            // Estado Civil
             printf("Estado civil: ");
             fflush(stdin);
             gets(jogadores[i].estado_civil);
             fflush(stdin);
+
+            // Equipe
             printf("Nome da equipe: ");
             fflush(stdin);
-            gets(jogadores[i].equipe_nome);
+            gets(jogadores[i].equipe.nome);
             fflush(stdin);
-            printf("Nome de usuario da rede social: ");
+            printf("Qual o username da equipe no Instagram? ");
+            fflush(stdin);
+            gets(jogadores[i].equipe.nicknameRedeSocial);
+            fflush(stdin);
+            printf("Quantos seguidores essa equipe tem no Instagram?");
+            fflush(stdin);
+            scanf("%d", &jogadores[i].equipe.seguidores);
+            fflush(stdin);
+
+            // Patrocinador
+            printf("Qual o principal patrocinador deste jogador?");
+            fflush(stdin);
+            gets(jogadores[i].patrocinador);
+            fflush(stdin);
+
+            // Rede social
+            printf("Nome de usuario do Instagram: ");
             fflush(stdin);
             gets(jogadores[i].rede_social_username);
             fflush(stdin);
-            printf("Digite a quantidade de seguidores nas redes sociais do jogador: ");
+            printf("Digite a quantidade de seguidores nessa mesma rede social: ");
             scanf("%d", &jogadores[i].seguidores_rede_social);
+
+            // Hardware
+            printf("Qual o modelo do computador/notebook usado?");
+            fflush(stdin);
+            gets(jogadores[i].hardware.modeloMaquinario);
+            fflush(stdin);
+            printf("O seu processador: ");
+            fflush(stdin);
+            gets(jogadores[i].hardware.processador);
+            fflush(stdin);
+            printf("A sua placa de video: ");
+            fflush(stdin);
+            gets(jogadores[i].hardware.placaDeVideo);
+            fflush(stdin);
+            printf("A quantidade de Memoria RAM(8/16/24/32/64): ");
+            scanf("%d", &jogadores[i].hardware.memoriaRAM);
+
+            // Campeonato
+            printf("Digite a quantidade de VITORIAS do jogador");
+            scanf("%d", &jogadores[i].campeonato.vitorias);
+            printf("Digite a quantidade de EMPATES do jogador");
+            scanf("%d", &jogadores[i].campeonato.empates);
+            printf("Digite a quantidade de DERROTAS do jogador");
+            scanf("%d", &jogadores[i].campeonato.derrotas);
+
+            // Quantidade de titulos
+            printf("Digite quantos titulos esse jogador ja ganhou: ");
+            scanf("%d", &jogadores[i].titulos);
+
+            // Posicao no rank 
+            printf("Digite a posicao que esse jogador se encontra no ranque mundial: ");
+            scanf("%d", &jogadores[i].posicaoRank);
+
             printf("\nO %d jogador foi cadastrado\n\n");
+            cont++; 
         }
-    printf("Foram cadastrados %d jogadores!", numJogadores);
+    printf("Foram cadastrados %d jogadores!", cont);
 }
 
 void escreverCadastroJogador(PLAYER jogadores[], int numJogadores){
@@ -117,44 +197,63 @@ void removerJogador(PLAYER jogadores[], int *numJogadores, char cpf[]) {
 }
 
 int main() {
-    int numJogadores = 0;
-    int opcao;
-    char cpf[12];
+    int opcao, numJogadores;
+    PLAYER jogadores[MAX_PLAYERS];
     printf("\n\tSistema de competicao de E-Sports\n\n");
-    printf("Digite a quantidade de jogadores\n(DEVE SER MAIOR que 30: ");
+    printf("Digite a quantidade de jogaodres\n");
+    printf("A quantidade de jogadores DEVE ser MAIOR OU IGUAL a 30 e MENOR OU IGUAL a 50: ");
     scanf("%d", &numJogadores);
         do{
-            printf("A quantidade de jogadores deve ser maior que 30!");
-            printf("\nDigite novamente a quantidade: ");
-            scanf("%d", &numJogadores);
-        }while(numJogadores < MIN_PLAYERS);
-    PLAYER jogadores[numJogadores];
-    while (1) {
-        printf("\n1. Cadastrar jogador\n");
-        printf("2. Listar jogadores\n");
-        printf("3. Remover jogador\n");
-        printf("4. Sair\n\n");
-        printf("Escolha a opção: ");
-        scanf("%d", &opcao);
-
-        switch (opcao) {
-            case 1:
-                cadastrarJogador(jogadores, &numJogadores);
-                break;
-            case 2:
-                listarJogadores(jogadores, numJogadores);
-                break;
-            case 3:
-                printf("Digite o CPF do jogador a ser removido: ");
-                scanf("%s", cpf);
-                removerJogador(jogadores, &numJogadores, cpf);
-                break;
-            case 4:
-                return 0;
-            default:
-                printf("Opção inválida. Tente novamente.\n");
+            printf("Digite uma quantidade valida para avancar!\n");
+            printf("Lembrando que DEVE ser MAIOR OU IGUAL a 30 e MENOR OU IGUAL a 50: ");
+        }while(numJogadores < 30 || numJogadores > 50);
+        while (1) {
+            printf("\n1. Cadastrar jogador\n");
+            printf("2. Alteracao de dados do jogador\n");
+            printf("3. Atualização dos jogos e pontuacao\n");
+            printf("4. Listagem ALFABELTICA dos jogadores\n");
+            printf("5. Listagem POR POSICAO dos jogadores\n");
+            printf("6. Listagem POR VITORIA dos jogadores\n");
+            printf("7. Classificacao do campeonato\n");
+            printf("8. Listagem de jogadores com pontuacao MAIOR que certa pontuacao\n");
+            printf("9. Listagem de jogadores com pontuacao MENOR que certa pontuacao\n");
+            printf("10. Busca de jogador POR NOME\n");
+            printf("11. Busca de jogador POR POSICAO no rank\n");
+            printf("12. Media de seguidores de um jogador\n");
+            printf("13. Sair");
+            printf("Escolha a opcao: ");
+            scanf("%d", &opcao);
+                switch (opcao) {
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;
+                    case 10:
+                        break;
+                    case 11:
+                        break;
+                    case 12:
+                        break;
+                    case 13:
+                        return 0;
+                    default:
+                        printf("Opção inválida. Tente novamente.\n");
+                }
         }
-    }
 
     return 0;
 }
