@@ -49,38 +49,36 @@ typedef struct Player{
     int posicaoRank;
 } PLAYER;
 
-void cadastrarJogador(PLAYER jogadores[], int *numJogadores) {
+void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
     int cont = 0;
-        for(int i = 0; i < *numJogadores; i++){
+        for(int i = 0; i < numJogadores; i++){
             // Nome
-            printf("Nome do jogador: ");
+            printf("\nNome do jogador: ");
             fflush(stdin);
             gets(jogadores[i].nome);
             fflush(stdin);
 
             // Data de nascimento
-            printf("Digite a sua data de nascimento\n ");
+            printf("Digite a sua data de nascimento\n");
             printf("O dia: ");
-            fflush(stdin);
-            gets(jogadores[i].dataNascimento.dia);
-            fflush(stdin);
-            gets(jogadores[i].dataNascimento.mes);
-            fflush(stdin);
-            gets(jogadores[i].dataNascimento.ano);
-            fflush(stdin);
+            scanf("%d", &jogadores[i].dataNascimento.dia);
+            printf("O mes (em numero): ");
+            scanf("%d", &jogadores[i].dataNascimento.mes);
+            printf("O ano: "); 
+            scanf("%d", &jogadores[i].dataNascimento.ano);
 
             // CPF
-            printf("CPF (11 digitos): ");
+            printf("\nCPF (11 digitos): ");
             scanf("%d", &jogadores[i].cpf);
 
             // Genero
-            printf("Genero: ");
+            printf("\nGenero: ");
             fflush(stdin);
             gets(jogadores[i].genero);
             fflush(stdin);
 
             // Estado Civil
-            printf("Estado civil: ");
+            printf("\nEstado civil: ");
             fflush(stdin);
             gets(jogadores[i].estado_civil);
             fflush(stdin);
@@ -90,23 +88,23 @@ void cadastrarJogador(PLAYER jogadores[], int *numJogadores) {
             fflush(stdin);
             gets(jogadores[i].equipe.nome);
             fflush(stdin);
-            printf("Qual o username da equipe no Instagram? ");
+            printf("Qual o username da equipe no Instagram?\n ");
             fflush(stdin);
             gets(jogadores[i].equipe.nicknameRedeSocial);
             fflush(stdin);
-            printf("Quantos seguidores essa equipe tem no Instagram?");
+            printf("Quantos seguidores essa equipe tem no Instagram?\n");
             fflush(stdin);
             scanf("%d", &jogadores[i].equipe.seguidores);
             fflush(stdin);
 
             // Patrocinador
-            printf("Qual o principal patrocinador deste jogador?");
+            printf("\nQual o principal patrocinador deste jogador?");
             fflush(stdin);
             gets(jogadores[i].patrocinador);
             fflush(stdin);
 
             // Rede social
-            printf("Nome de usuario do Instagram: ");
+            printf("\nNome de usuario do Instagram do jogador: ");
             fflush(stdin);
             gets(jogadores[i].rede_social_username);
             fflush(stdin);
@@ -114,7 +112,7 @@ void cadastrarJogador(PLAYER jogadores[], int *numJogadores) {
             scanf("%d", &jogadores[i].seguidores_rede_social);
 
             // Hardware
-            printf("Qual o modelo do computador/notebook usado?");
+            printf("\nQual o modelo do computador/notebook usado?\n");
             fflush(stdin);
             gets(jogadores[i].hardware.modeloMaquinario);
             fflush(stdin);
@@ -130,7 +128,7 @@ void cadastrarJogador(PLAYER jogadores[], int *numJogadores) {
             scanf("%d", &jogadores[i].hardware.memoriaRAM);
 
             // Campeonato
-            printf("Digite a quantidade de VITORIAS do jogador");
+            printf("\nDigite a quantidade de VITORIAS do jogador");
             scanf("%d", &jogadores[i].campeonato.vitorias);
             printf("Digite a quantidade de EMPATES do jogador");
             scanf("%d", &jogadores[i].campeonato.empates);
@@ -138,31 +136,44 @@ void cadastrarJogador(PLAYER jogadores[], int *numJogadores) {
             scanf("%d", &jogadores[i].campeonato.derrotas);
 
             // Quantidade de titulos
-            printf("Digite quantos titulos esse jogador ja ganhou: ");
+            printf("\nDigite quantos titulos esse jogador ja ganhou: ");
             scanf("%d", &jogadores[i].titulos);
 
             // Posicao no rank 
-            printf("Digite a posicao que esse jogador se encontra no ranque mundial: ");
+            printf("\nDigite a posicao que esse jogador se encontra no ranque mundial: ");
             scanf("%d", &jogadores[i].posicaoRank);
 
-            printf("\nO %d jogador foi cadastrado\n\n");
+            printf("\nO %d jogador foi cadastrado\n\n", i+1);
             cont++; 
         }
     printf("Foram cadastrados %d jogadores!", cont);
 }
 
-void escreverCadastroJogador(PLAYER jogadores[], int numJogadores){
+void escreverBinario(PLAYER jogadores[], int numJogadores){
     FILE *file;
     file = fopen("sistema.dat", "wb");
     if(file == NULL){
-        printf("O arquivo nao foi aberto :(");
+        printf("O arquivo não foi aberto ;(");
     }
-    int qtdRegistros = fwrite(jogadores, sizeof(PLAYER), numJogadores, file);
-    printf("\nForam inscritos %d jogadores!\n", qtdRegistros);
+    int qtsRegEscritos = fwrite(jogadores, sizeof(PLAYER), numJogadores, file);
+    printf("\nForam escritos %d registro(s) de jogador(es)!\n", qtsRegEscritos);
     fclose(file);
 }
 
-void listarJogadores(PLAYER jogadores[], int numJogadores) {
+void lerBinario(PLAYER jogadores[], int numJogadores){
+    FILE *file;
+    file = fopen("sistema.dat", "rb");
+    if(file == NULL){
+        printf("O arquivo não foi aberto ;(");
+    }
+    int qtdRegLidos;
+    qtdRegLidos = fread(jogadores, sizeof(PLAYER), numJogadores, file); 
+    printf("\nForam lidos %d registro(s) de jogador(es)!\n", qtdRegLidos);
+    fclose(file);
+    return;
+}
+
+/* void listarJogadores(PLAYER jogadores[], int numJogadores) {
     if (numJogadores > 0) {
         printf("Lista de Jogadores:\n");
         for (int i = 0; i < numJogadores; i++) {
@@ -194,23 +205,19 @@ void removerJogador(PLAYER jogadores[], int *numJogadores, char cpf[]) {
         }
     }
     printf("Jogador com CPF %s não encontrado.\n", cpf);
-}
+}*/
 
 int main() {
     int opcao, numJogadores;
-    PLAYER jogadores[MAX_PLAYERS];
     printf("\n\tSistema de competicao de E-Sports\n\n");
-    printf("Digite a quantidade de jogaodres\n");
+    printf("Digite a quantidade de jogadres\n");
     printf("A quantidade de jogadores DEVE ser MAIOR OU IGUAL a 30 e MENOR OU IGUAL a 50: ");
     scanf("%d", &numJogadores);
-        do{
-            printf("Digite uma quantidade valida para avancar!\n");
-            printf("Lembrando que DEVE ser MAIOR OU IGUAL a 30 e MENOR OU IGUAL a 50: ");
-        }while(numJogadores < 30 || numJogadores > 50);
+    PLAYER jogadores[numJogadores];
         while (1) {
             printf("\n1. Cadastrar jogador\n");
             printf("2. Alteracao de dados do jogador\n");
-            printf("3. Atualização dos jogos e pontuacao\n");
+            printf("3. Atualizacao dos jogos e pontuacao\n");
             printf("4. Listagem ALFABELTICA dos jogadores\n");
             printf("5. Listagem POR POSICAO dos jogadores\n");
             printf("6. Listagem POR VITORIA dos jogadores\n");
@@ -220,13 +227,16 @@ int main() {
             printf("10. Busca de jogador POR NOME\n");
             printf("11. Busca de jogador POR POSICAO no rank\n");
             printf("12. Media de seguidores de um jogador\n");
-            printf("13. Sair");
+            printf("13. Sair\n");
             printf("Escolha a opcao: ");
             scanf("%d", &opcao);
                 switch (opcao) {
                     case 1:
+                        cadastrarJogador(jogadores, numJogadores);
+                        escreverBinario(jogadores, numJogadores);
                         break;
                     case 2:
+                        lerBinario(jogadores, numJogadores);
                         break;
                     case 3:
                         break;
