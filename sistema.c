@@ -36,7 +36,7 @@ typedef enum estado_civil {solteiro, divorciado, casado, viuvo, separado} estado
 typedef struct Player{
     char nome[100];
     DATA dataNascimento;
-    char cpf[12];
+    char cpf[15];
     GENERO genero[20];
     estadoCivil estado_civil[15];
     EQUIPE equipe;
@@ -48,6 +48,30 @@ typedef struct Player{
     int titulos;
     int posicaoRank;
 } PLAYER;
+
+void escreverBinario(PLAYER jogadores[], int numJogadores){
+    FILE *file;
+    file = fopen("sistema.dat", "rb+");
+    if(file == NULL){
+        printf("O arquivo não foi aberto ;(");
+    }
+    int qtsRegEscritos = fwrite(jogadores, sizeof(PLAYER), numJogadores, file);
+    printf("\nForam escritos %d registro(s) de jogador(es)!\n", qtsRegEscritos);
+    fclose(file);
+}
+
+void lerBinario(PLAYER jogadores[], int numJogadores){
+    FILE *file;
+    file = fopen("sistema.dat", "rb");
+    if(file == NULL){
+        printf("O arquivo não foi aberto ;(");
+    }
+    int qtdRegLidos;
+    qtdRegLidos = fread(jogadores, sizeof(PLAYER), numJogadores, file); 
+    printf("\nForam lidos %d registro(s) de jogador(es)!\n", qtdRegLidos);
+    fclose(file);
+    return;
+}
 
 void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
     int cont = 0;
@@ -69,7 +93,9 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
 
             // CPF
             printf("\nCPF (11 digitos): ");
-            scanf("%d", &jogadores[i].cpf);
+            fflush(stdin);
+            gets(jogadores[i].cpf);
+            fflush(stdin);
 
             // Genero
             printf("\nGenero: ");
@@ -143,56 +169,52 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
             printf("\nDigite a posicao que esse jogador se encontra no ranque mundial: ");
             scanf("%d", &jogadores[i].posicaoRank);
 
-            escreverBinario(jogadores, numJogadores);
+            printf("\nO %d jogador foi cadastrado\n\n", i+1);
             cont++; 
         }
     printf("\nForam cadastrados %d jogadores!", cont);
 }
 
-void escreverBinario(PLAYER jogadores[], int numJogadores){
+void lerInformacoesJogador(PLAYER jogadores[], int numJogadores){
     FILE *file;
-    file = fopen("sistema.dat", "rb+");
-    if(file == NULL){
-        printf("O arquivo não foi aberto ;(");
-    }
-    int qtsRegEscritos = fwrite(jogadores, sizeof(PLAYER), numJogadores, file);
-    printf("\nForam escritos %d registro(s) de jogador(es)!\n", qtsRegEscritos);
-    fclose(file);
-}
+    file = fopen("sistema.c", "rb"); // rb == leitura e somente leitura
+        if(file == NULL){
+            printf("O arquivo nao foi aberto >:(");
+        }
+    fseek(file, 0*sizeof(PLAYER), SEEK_END); // coloca o ponteiro no fim
+    int posicao = ftell(file); // diz o tamanho total do arquivo
+    int qtdJogadores = (posicao/36); 
+    PLAYER jogador[qtdJogadores];
+    fseek(file, 0*sizeof(PLAYER), SEEK_SET); // coloca o ponteiro novamente no inicio
+    fread(jogadores, sizeof(PLAYER), qtdJogadores, file);
+        for(int i = 0; i < qtdJogadores; i++){
+            printf("%d Jogador:\n\n", i + 1);
 
-void lerBinario(PLAYER jogadores[], int numJogadores){
-    FILE *file;
-    file = fopen("sistema.dat", "rb");
-    if(file == NULL){
-        printf("O arquivo não foi aberto ;(");
-    }
-    int qtdRegLidos;
-    qtdRegLidos = fread(jogadores, sizeof(PLAYER), numJogadores, file); 
-    printf("\nForam lidos %d registro(s) de jogador(es)!\n", qtdRegLidos);
-    fclose(file);
-    return;
-}
-
-/* void listarJogadores(PLAYER jogadores[], int numJogadores) {
-    if (numJogadores > 0) {
-        printf("Lista de Jogadores:\n");
-        for (int i = 0; i < numJogadores; i++) {
-            printf("%d Jogador:\n", i + 1);
+            //Dados gerais
             printf("Nome: %s\n", jogadores[i].nome);
-            printf("Data de Nascimento: %s\n", jogadores[i].data_nascimento);
+            printf("Data de Nascimento: %d/%d/%d\n", jogadores[i].dataNascimento.dia, jogadores[i].dataNascimento.mes, jogadores[i].dataNascimento.ano);
             printf("CPF: %s\n", jogadores[i].cpf);
             printf("Gênero: %s\n", jogadores[i].genero);
-            printf("Estado Civil: %s\n", jogadores[i].estado_civil);
-            printf("Nome da Equipe: %s\n", jogadores[i].equipe_nome);
-            printf("Username da Rede Social: %s\n", jogadores[i].rede_social_username);
-            printf("Número de Seguidores na Rede Social: %d\n", jogadores[i].seguidores_rede_social);
+            printf("Estado Civil: %s\n\n", jogadores[i].estado_civil);
+
+            // Equipe
+            printf("Nome da Equipe: %s\n", jogadores[i].equipe.nome);
+            printf("Username da equipe: %s\n", jogadores[i].equipe.nicknameRedeSocial);
+            printf("Seguidores da equipe: %d\n\n", jogadores[i].equipe.seguidores);
+
+            // Patrocinador
+
+            // Rede social
+
+            // Hardware
+
+            // Campeonato
+
+            // Posicao no rank
             printf("\n------------------------------------\n");
         }
-    } else {
-        printf("Nenhum jogador cadastrado ainda.\n");
-    }
 }
-
+/* 
 void removerJogador(PLAYER jogadores[], int *numJogadores, char cpf[]) {
     for (int i = 0; i < *numJogadores; i++) {
         if (strcmp(jogadores[i].cpf, cpf) == 0) {
@@ -243,6 +265,7 @@ int main() {
                         cadastrarJogador(jogadores, numJogadores);
                         break;
                     case 2:
+                        lerInformacoesJogador(jogadores, numJogadores);
                         lerBinario(jogadores, numJogadores);
                         break;
                     case 3:
