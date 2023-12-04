@@ -56,7 +56,7 @@ void escreverBinario(PLAYER jogadores[], int numJogadores){
         printf("O arquivo não foi aberto ;(");
     }
     int qtsRegEscritos = fwrite(jogadores, sizeof(PLAYER), numJogadores, file);
-    printf("\nForam escritos %d registro(s) de jogador(es)!\n", qtsRegEscritos);
+    printf("\nFoi escrito %d registro(s) de jogador(es)!\n", qtsRegEscritos);
     fclose(file);
 }
 
@@ -114,7 +114,7 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
             fflush(stdin);
             gets(jogadores[i].equipe.nome);
             fflush(stdin);
-            printf("O username DA EQUIPE no Instagram: ");
+            printf("O username DA EQUIPE no Instagram: @");
             fflush(stdin);
             gets(jogadores[i].equipe.nicknameRedeSocial);
             fflush(stdin);
@@ -130,7 +130,7 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
             fflush(stdin);
 
             // Rede social
-            printf("\nNome de usuario do Instagram do jogador: ");
+            printf("\nNome de usuario do Instagram do jogador: @");
             fflush(stdin);
             gets(jogadores[i].rede_social_username);
             fflush(stdin);
@@ -154,12 +154,17 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
             scanf("%d", &jogadores[i].hardware.memoriaRAM);
 
             // Campeonato
-            printf("\nDigite a quantidade de VITORIAS do jogador");
+            printf("\nDigite a quantidade de VITORIAS do jogador: ");
             scanf("%d", &jogadores[i].campeonato.vitorias);
-            printf("Digite a quantidade de EMPATES do jogador");
+            int vitoria = jogadores[i].campeonato.vitorias;
+            printf("Digite a quantidade de EMPATES do jogador: ");
             scanf("%d", &jogadores[i].campeonato.empates);
-            printf("Digite a quantidade de DERROTAS do jogador");
+            int empate = jogadores[i].campeonato.empates;
+            printf("Digite a quantidade de DERROTAS do jogador: ");
             scanf("%d", &jogadores[i].campeonato.derrotas);
+
+            int pontos = vitoria*3 + empate*1; 
+            jogadores[i].campeonato.pontuacao = pontos;
 
             // Quantidade de titulos
             printf("\nDigite quantos titulos esse jogador ja ganhou: ");
@@ -171,30 +176,32 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
 
             printf("\nO %d jogador foi cadastrado\n\n", i+1);
             cont++; 
+
+            escreverBinario(jogadores, numJogadores);
         }
     printf("\nForam cadastrados %d jogadores!", cont);
 }
 
 void lerInformacoesJogador(PLAYER jogadores[], int numJogadores){
     FILE *file;
-    file = fopen("sistema.c", "rb"); // rb == leitura e somente leitura
+    file = fopen("sistema.dat", "rb"); // rb == leitura e somente leitura
         if(file == NULL){
             printf("O arquivo nao foi aberto >:(");
         }
-    fseek(file, 0*sizeof(PLAYER), SEEK_END); // coloca o ponteiro no fim
-    int posicao = ftell(file); // diz o tamanho total do arquivo
-    int qtdJogadores = (posicao/36); 
-    PLAYER jogador[qtdJogadores];
-    fseek(file, 0*sizeof(PLAYER), SEEK_SET); // coloca o ponteiro novamente no inicio
-    fread(jogadores, sizeof(PLAYER), qtdJogadores, file);
-        for(int i = 0; i < qtdJogadores; i++){
+    fseek(file, 0, SEEK_END); // coloca o ponteiro no fim
+    int tamArquivo = ftell(file); // diz o tamanho total do arquivo (incluindo outras informações que possa conter)
+    fseek(file, 0, SEEK_SET); // coloca o ponteiro novamente no inicio
+    // tem que ser com 0, não pode ser 0*PLAYER(jogadores) porque não vai :(
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+    printf("\n------------------------------------\n"); 
+        for(int i = 0; i < numJogadores; i++){
             printf("%d Jogador:\n\n", i + 1);
 
             //Dados gerais
             printf("Nome: %s\n", jogadores[i].nome);
             printf("Data de Nascimento: %d/%d/%d\n", jogadores[i].dataNascimento.dia, jogadores[i].dataNascimento.mes, jogadores[i].dataNascimento.ano);
             printf("CPF: %s\n", jogadores[i].cpf);
-            printf("Gênero: %s\n", jogadores[i].genero);
+            printf("Genero: %s\n", jogadores[i].genero);
             printf("Estado Civil: %s\n\n", jogadores[i].estado_civil);
 
             // Equipe
@@ -203,15 +210,33 @@ void lerInformacoesJogador(PLAYER jogadores[], int numJogadores){
             printf("Seguidores da equipe: %d\n\n", jogadores[i].equipe.seguidores);
 
             // Patrocinador
+            printf("Patrocinador principal: %s\n\n", jogadores[i].patrocinador);
 
             // Rede social
+            printf("Username no Instagram: @%s\n", jogadores[i].rede_social_username);
+            printf("Seguidores no Instagram: %d\n\n", jogadores[i].seguidores_rede_social);
 
             // Hardware
+            printf("Modelo da maquina: %s\n", jogadores[i].hardware.modeloMaquinario);
+            printf("Processador: %s\n", jogadores[i].hardware.processador);
+            printf("Placa de video: %s\n", jogadores[i].hardware.placaDeVideo);
+            printf("Quantidade de memoria RAM: %dGB\n\n", jogadores[i].hardware.memoriaRAM);
 
             // Campeonato
+            printf("Pontuacao no campeonato: %d\n", jogadores[i].campeonato.pontuacao);
+            printf("Vitorias: %d\n", jogadores[i].campeonato.vitorias);
+            printf("Empates: %d\n", jogadores[i].campeonato.empates);
+            printf("Derrotas: %d\n\n", jogadores[i].campeonato.derrotas);
+
+            // Titulos
+            printf("Quantidade de titulos: %d\n", jogadores[i].titulos);
 
             // Posicao no rank
+            printf("Posicao no rank mundial: %d", jogadores[i].posicaoRank);
+
             printf("\n------------------------------------\n");
+            
+            system("pause");
         }
 }
 /* 
@@ -245,7 +270,7 @@ int main() {
     PLAYER jogadores[numJogadores];
         while (1) {
             printf("\n1. Cadastrar jogador\n");
-            printf("2. Ler ficha do jogador\n");
+            printf("2. Listar TODOS os jogadores\n");
             printf("3. Alteracao de dados do jogador\n");
             printf("4. Atualizacao dos jogos e pontuacao\n");
             printf("5. Listagem ALFABELTICA dos jogadores\n");
@@ -265,8 +290,8 @@ int main() {
                         cadastrarJogador(jogadores, numJogadores);
                         break;
                     case 2:
-                        lerInformacoesJogador(jogadores, numJogadores);
                         lerBinario(jogadores, numJogadores);
+                        lerInformacoesJogador(jogadores, numJogadores);
                         break;
                     case 3:
                         break;
