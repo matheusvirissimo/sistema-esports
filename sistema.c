@@ -194,7 +194,12 @@ void lerInformacoesJogador(PLAYER jogadores[], int numJogadores){
     // tem que ser com 0, não pode ser 0*PLAYER(jogadores) porque não vai :(
     fread(jogadores, sizeof(PLAYER), tamArquivo, file);
     printf("\n------------------------------------\n"); 
-        for(int i = 0; i < numJogadores; i++){
+        for(int i = 0; i < numJogadores; i++){ // tem que mudar o FOR
+            if(jogadores[i].nome[0] == '\0'){
+                // Sai do FOR
+                break;
+            }
+            
             printf("%d Jogador:\n\n", i + 1);
 
             //Dados gerais
@@ -238,6 +243,73 @@ void lerInformacoesJogador(PLAYER jogadores[], int numJogadores){
             
             system("pause");
         }
+}
+
+void correcaoDadosJogador(PLAYER jogadores, int numJogadores){
+    FILE *file;
+    file = fopen("sistema.c", "wb");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    
+}
+
+void inserirVitoriaEmpateDerrota(int numJogadores) {
+    FILE *file;
+    file = fopen("sistema.dat", "rb+");
+    if (file == NULL) {
+        printf("O arquivo nao foi aberto aff");
+        return;
+    }
+
+    char escolha[5];
+    int posicaoJogador;
+
+    printf("\n\nVoce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Voce deseja ver a lista por inscricao?\nDigite 'Sim' ou 'Nao': ");
+    fflush(stdin);
+    gets(escolha);
+    fflush(stdin);
+
+    if (strcmp(escolha, "sim") == 0 || strcmp(escolha, "Sim") == 0 || strcmp(escolha, "SIM") == 0){
+        printf("A lista dos jogadores:\n");
+        /*for (int i = 0; i < numJogadores; i++) {
+            PLAYER jogador;
+            fseek(file, i * sizeof(PLAYER), SEEK_SET);
+            fread(&jogador, sizeof(PLAYER), 1, file);
+            printf("%d - %s - %d - %d - %d - %d\n", i + 1, jogador.nome, jogador.campeonato.vitorias,
+                   jogador.campeonato.empates, jogador.campeonato.derrotas, jogador.campeonato.pontuacao);
+        }
+        printf("Digite a numeracao do jogador a ser alterado: ");
+        scanf("%d", &posicaoJogador);
+        do {
+            printf("Digite uma numeracao valida: ");
+            scanf("%d", &posicaoJogador);
+        } while (posicaoJogador <= 0 || posicaoJogador > numJogadores);
+        posicaoJogador--; // isso é feito para que, caso digitado 1, o ponteiro comece do inicio, ou seja, no 0, não no 36
+    } else {*/
+        printf("Digite a numeracao do jogador a ser alterado: ");
+        scanf("%d", &posicaoJogador);
+        do {
+            printf("Digite uma numeracao valida: ");
+            scanf("%d", &posicaoJogador);
+        } while (posicaoJogador <= 0 || posicaoJogador > numJogadores);
+    }
+
+    PLAYER vetorAux[1];
+    printf("Digite as VITORIAS atualizadas: ");
+    scanf("%d", &vetorAux[0].campeonato.vitorias);
+    printf("Digite os EMPATES atualizados: ");
+    scanf("%d", &vetorAux[0].campeonato.empates);
+    printf("Digite as DERROTAS atualizadas: ");
+    scanf("%d", &vetorAux[0].campeonato.derrotas);
+
+    vetorAux[0].campeonato.pontuacao = vetorAux[0].campeonato.vitorias * 3 + vetorAux[0].campeonato.empates;
+
+    fseek(file, posicaoJogador * sizeof(PLAYER), SEEK_SET);
+    fwrite(vetorAux, sizeof(PLAYER), 1, file);
+    fclose(file);
 }
 /* 
 void removerJogador(PLAYER jogadores[], int *numJogadores, char cpf[]) {
@@ -296,6 +368,7 @@ int main() {
                     case 3:
                         break;
                     case 4:
+                        inserirVitoriaEmpateDerrota(numJogadores);
                         break;
                     case 5:
                         break;
