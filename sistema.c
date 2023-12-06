@@ -189,7 +189,7 @@ void lerInformacoesJogador(PLAYER jogadores[], int numJogadores){
             printf("O arquivo nao foi aberto >:(");
         }
     fseek(file, 0, SEEK_END); // coloca o ponteiro no fim
-    int tamArquivo = ftell(file); // diz o tamanho total do arquivo (incluindo outras informações que possa conter)
+    int tamArquivo = ftell(file)/sizeof(PLAYER); // diz o tamanho total do arquivo (incluindo outras informações que possa conter)
     fseek(file, 0, SEEK_SET); // coloca o ponteiro novamente no inicio
     // tem que ser com 0, não pode ser 0*PLAYER(jogadores) porque não vai :(
     fread(jogadores, sizeof(PLAYER), tamArquivo, file);
