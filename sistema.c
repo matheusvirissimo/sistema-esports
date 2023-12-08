@@ -437,6 +437,25 @@ FILE *file;
     return;
 }
 
+void mediaSeguidores(PLAYER jogadores[], int numJogadores){
+    FILE *file;
+    file = fopen("sistema.dat", "rb"); // não vamos escrever no arquivo, vamos ler os dados e depois transpor eles
+        if(file == NULL){
+            printf("O arquivo nao foi aberto :/");
+        }
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
+    float seguidoresTotal = 0;
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+        for(int i = 0; i < tamArquivo; i++){
+            seguidoresTotal += jogadores[i].seguidores_rede_social; // += é a mesma coisa que x = x + y, só fica mais elegante :)
+        }
+    float seguidoresMedia = seguidoresTotal/tamArquivo;
+    printf("A quantidade MEDIA dos seguidores do campeonato e de: %.2f\n", seguidoresMedia);
+    printf("\n------------------------------------\n");
+}
+
 int main() {
     int opcao, numJogadores = MAX_PLAYERS, rank;
     char nome[100];
@@ -499,6 +518,8 @@ int main() {
                         buscaPorRank(rank);
                         break;
                     case 13:
+                        printf("\t\n\n*** MEDIA DE SEGUIDORES ***\n\n");
+                        mediaSeguidores(jogadores, numJogadores);
                         break;
                     case 14:
                         return 0;
