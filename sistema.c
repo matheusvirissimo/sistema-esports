@@ -49,13 +49,17 @@ typedef struct Player{
     int posicaoRank;
 } PLAYER;
 
-void escreverBinario(PLAYER jogadores[], int numJogadores){ // ATENÇÃO
+void escreverBinario(PLAYER jogadores[], int numJogadores, int qtdJogadores){ 
     FILE *file;
-    file = fopen("sistema.dat", "rb+");
+    file = fopen("sistema.dat", "ab+");
     if(file == NULL){
         printf("O arquivo não foi aberto ;(");
     }
-    int qtsRegEscritos = fwrite(jogadores, sizeof(PLAYER), numJogadores, file);
+    int teste = sizeof(PLAYER)*30 + (qtdJogadores--);
+    int cadastro = ftell(file)/teste;
+    fseek(file, teste, SEEK_SET);
+    fread(jogadores, sizeof(PLAYER), numJogadores, file);
+    int qtsRegEscritos = fwrite(jogadores, sizeof(PLAYER), qtdJogadores, file);
     printf("\nFoi escrito %d registro(s) de jogador(es)!\n", qtsRegEscritos);
     fclose(file);
 }
@@ -74,8 +78,11 @@ void lerBinario(PLAYER jogadores[], int numJogadores){
 }
 
 void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
-    int cont = 0;
-        for(int i = 0; i < numJogadores; i++){
+    int cont = 0, qtdJogadores;
+    printf("\t\n\n*** CADASTRO DE JOGADORES ***\n\n");
+    printf("Digite quantos jogadores você deseja cadastrar: ");
+    scanf("%d", &qtdJogadores);
+        for(int i = 0; i < qtdJogadores; i++){
             // Nome
             printf("\nNome do jogador: ");
             fflush(stdin);
@@ -177,7 +184,7 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
             printf("\nO %d jogador foi cadastrado\n\n", i+1);
             cont++; 
 
-            escreverBinario(jogadores, numJogadores);
+            escreverBinario(jogadores, numJogadores, qtdJogadores);
         }
     printf("Foram cadastrados %d jogadores!\n\n", cont);
 }
@@ -321,14 +328,16 @@ void inserirVitoriaEmpateDerrota(int numJogadores) { // BUGADO
         return;
     }
     int posicaoJogador;
-    fseek(file, posicaoJogador * sizeof(PLAYER), SEEK_SET);
+    fseek(file, 0, SEEK_END);
     int tamArquivo = ftell(file)/sizeof(PLAYER); 
-    rewind(file);
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
     printf("\n\nVoce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
     printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
     printf("Digite a numeracao do jogador a ser alterado: ");
     scanf("%d", &posicaoJogador);
-
     posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
     PLAYER vetorAux[1];
     printf("Digite as VITORIAS atualizadas: ");
@@ -366,7 +375,7 @@ void buscaPorNome(char nome[100]){
     int tamArquivo = ftell(file)/tamStruct;
     PLAYER jogadores[tamArquivo];
     fseek(file, 0, SEEK_SET); // volta o ponteiro no inicio para sua manipulação
-    fread(jogadores, sizeof(PLAYER), tamStruct, file);
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
     int i = 0;
         for(i = 0; i < tamArquivo; i++){
             if(strcmp(jogadores[i].nome, nome) == 0){
@@ -385,12 +394,10 @@ void buscaPorRank(int rank){
 }
 
 int main() {
-    int opcao, numJogadores = 30, rank;
+    int opcao, numJogadores = MAX_PLAYERS, rank;
     char nome[100];
-    printf("\n\tSistema de competicao de E-Sports\n\n");
-    printf("Digite a quantidade de jogadres\n");
-    printf("A quantidade de jogadores DEVE ser MAIOR OU IGUAL a 30 e MENOR OU IGUAL a 50: ");
     PLAYER jogadores[numJogadores];
+    printf("\n\tSistema de competicao de E-Sports\n\n");
         while (1) {
             printf("\n1. Cadastrar jogador\n");
             printf("2. Listar TODOS os jogadores\n");
@@ -434,12 +441,12 @@ int main() {
                     case 10:
                         break;
                     case 11:
-                        break;
                         printf("Digite o nome do jogador igual a como esta listado: ");
                         fflush(stdin);
                         gets(nome);
                         fflush(stdin);
                         buscaPorNome(nome);
+                        break;
                     case 12:
                         printf("Digite o ranque do jogador que voce busca: ");
                         scanf("%d", &rank);
