@@ -435,6 +435,33 @@ void inserirVitoriaEmpateDerrota(int numJogadores) { // BUGADO
     }
 
 void listagemAlfabetica(){
+    FILE *file;
+    file = fopen("sistema.dat", "rb");
+        if(file == NULL){
+            printf("o arquivo nao foi aberto!!");
+        }
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
+    PLAYER jogadores[tamArquivo];
+    PLAYER auxiliar;
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+    int i = 0, j = 0;
+        for(i = 0; i < tamArquivo; i++){
+            for(j = 0; j < tamArquivo - 1; j++){
+                if (stricmp(jogadores[j].nome, jogadores[j + 1].nome) > 0) { //stricmp é um strcmp que não é case-sensitive
+                    // > 0 significa que é maior e < 0 que é menor. Tudo isso é via ASCII
+                    auxiliar = jogadores[j];
+                    jogadores[j] = jogadores[j + 1];
+                    jogadores[j + 1] = auxiliar;
+                }
+            }
+        }
+        for(i = 0; i < tamArquivo; i++){
+            printf("%s\n", jogadores[i].nome);
+            printf("\n------------------------------------\n\n");
+        }
+    fclose(file);
 }
 
 void listagemRank(){
