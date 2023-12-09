@@ -445,54 +445,37 @@ void listagemVitoria(){
 
 }
 
-void buscaPorNome(char nome[100]){
+void classificaoCampeonato(){ // usar BubbleSort por ser indexado, o que não afeta diretamente a ordem das outras funções
+    // nome, posição no campeonato, pontuação, quantidade de vitorias, derrotas e empates.
     FILE *file;
-    file = fopen("sistema.dat", "rb"); // só faz leitura, é uma busca afinal
+    file = fopen("sistema.dat", "rb");
         if(file == NULL){
-            printf("O arquivo nao foi abertoooo");
+            printf("o arquivo nao foi aberto!!");
         }
-    fseek(file, 0, SEEK_END); // é importante sempre colocar o ponteiro no fim, porque fazemos várias manipulações e o tamanho pode variar
-    int tamStruct = sizeof(PLAYER); // se usa comumente 36, mas cada struct pode variar
-    int tamArquivo = ftell(file)/tamStruct;
-    PLAYER jogadores[tamArquivo];
-    fseek(file, 0, SEEK_SET); // volta o ponteiro no inicio para sua manipulação
-    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
-    int i = 0;
-        for(i = 0; i < tamArquivo; i++){
-            if(strcmp(jogadores[i].nome, nome) == 0){
-                int numeroDoJogador = i;
-                lerInformacoesUnicoJogador(jogadores, tamArquivo, numeroDoJogador);
-            }else{
-                printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
-            }
-        }
-    fclose(file);
-    return;
-}
-
-void buscaPorRank(int rank){
-FILE *file;
-    file = fopen("sistema.dat", "rb"); // só faz leitura, é uma busca afinal
-        if(file == NULL){
-            printf("O arquivo nao foi abertoooo");
-        }
-    fseek(file, 0, SEEK_END); 
+    fseek(file, 0, SEEK_END);
     int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
     PLAYER jogadores[tamArquivo];
-    fseek(file, 0, SEEK_SET); // volta o ponteiro no inicio para sua manipulação
+    PLAYER auxiliar;
     fread(jogadores, sizeof(PLAYER), tamArquivo, file);
-    int i = 0;
+    int i = 0, j = 0;
         for(i = 0; i < tamArquivo; i++){
-            if(jogadores[i].posicaoRank == rank){
-                int numeroDoJogador = i;
-                lerInformacoesUnicoJogador(jogadores, tamArquivo, numeroDoJogador);
-                break; 
-            }else{
-                printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
+            for(j = 0; j < tamArquivo - 1; j++){
+                if(jogadores[j].campeonato.pontuacao < jogadores[j+1].campeonato.pontuacao){
+                    auxiliar = jogadores[j];
+                    jogadores[j] = jogadores[j+1];
+                    jogadores[j+1] = auxiliar;
+                }
             }
         }
-    fclose(file);
-    return;
+        for(i = 0; i < tamArquivo; i++){
+            printf("%d lugar - %s\n\n", i+1, jogadores[i].nome);
+            printf("Pontuacao no campeonato: %d\n", jogadores[i].campeonato.pontuacao);
+            printf("Vitorias: %d\n", jogadores[i].campeonato.vitorias);
+            printf("Empates: %d\n", jogadores[i].campeonato.empates);
+            printf("Derrotas: %d\n", jogadores[i].campeonato.derrotas);
+            printf("\n------------------------------------\n\n");
+        }
 }
 
 void listagemPontuacaoMaior(){
@@ -636,7 +619,57 @@ void listagemPontuacaoMenor(){
 
 }
 
-void mediaSeguidores(PLAYER jogadores[], int numJogadores){
+void buscaPorNome(char nome[100]){
+    FILE *file;
+    file = fopen("sistema.dat", "rb"); // só faz leitura, é uma busca afinal
+        if(file == NULL){
+            printf("O arquivo nao foi abertoooo");
+        }
+    fseek(file, 0, SEEK_END); // é importante sempre colocar o ponteiro no fim, porque fazemos várias manipulações e o tamanho pode variar
+    int tamStruct = sizeof(PLAYER); // se usa comumente 36, mas cada struct pode variar
+    int tamArquivo = ftell(file)/tamStruct;
+    PLAYER jogadores[tamArquivo];
+    fseek(file, 0, SEEK_SET); // volta o ponteiro no inicio para sua manipulação
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+    int i = 0;
+        for(i = 0; i < tamArquivo; i++){
+            if(strcmp(jogadores[i].nome, nome) == 0){
+                int numeroDoJogador = i;
+                lerInformacoesUnicoJogador(jogadores, tamArquivo, numeroDoJogador);
+            }else{
+                printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
+            }
+        }
+    fclose(file);
+    return;
+}
+
+void buscaPorRank(int rank){
+FILE *file;
+    file = fopen("sistema.dat", "rb"); // só faz leitura, é uma busca afinal
+        if(file == NULL){
+            printf("O arquivo nao foi abertoooo");
+        }
+    fseek(file, 0, SEEK_END); 
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    PLAYER jogadores[tamArquivo];
+    fseek(file, 0, SEEK_SET); // volta o ponteiro no inicio para sua manipulação
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+    int i = 0;
+        for(i = 0; i < tamArquivo; i++){
+            if(jogadores[i].posicaoRank == rank){
+                int numeroDoJogador = i;
+                lerInformacoesUnicoJogador(jogadores, tamArquivo, numeroDoJogador);
+                break; 
+            }else{
+                printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
+            }
+        }
+    fclose(file);
+    return;
+}
+
+void mediaSeguidores(PLAYER jogadores[]){
     FILE *file;
     file = fopen("sistema.dat", "rb"); // não vamos escrever no arquivo, vamos ler os dados e depois transpor eles
         if(file == NULL){
@@ -697,6 +730,8 @@ int main() {
                     case 7:
                         break;
                     case 8:
+                        printf("\t\n\n*** Classificacao do campeonato ***\n\n");
+                        classificaoCampeonato();
                         break;
                     case 9:
                         listagemPontuacaoMaior();
@@ -720,7 +755,7 @@ int main() {
                         break;
                     case 13:
                         printf("\t\n\n*** MEDIA DE SEGUIDORES ***\n\n");
-                        mediaSeguidores(jogadores, numJogadores);
+                        mediaSeguidores(jogadores);
                         break;
                     case 14:
                         return 0;
