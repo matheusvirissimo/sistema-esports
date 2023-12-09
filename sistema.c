@@ -438,7 +438,32 @@ void listagemAlfabetica(){
 }
 
 void listagemRank(){
-
+    FILE *file;
+    file = fopen("sistema.dat", "rb");
+        if(file == NULL){
+            printf("o arquivo nao foi aberto!!");
+        }
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
+    PLAYER jogadores[tamArquivo];
+    PLAYER auxiliar;
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+    int i = 0, j = 0;
+        for(i = 0; i < tamArquivo; i++){
+            for(j = 0; j < tamArquivo - 1; j++){
+                if(jogadores[j].posicaoRank > jogadores[j+1].posicaoRank){
+                    auxiliar = jogadores[j];
+                    jogadores[j] = jogadores[j+1];
+                    jogadores[j+1] = auxiliar;
+                }
+            }
+        }
+        for(i = 0; i < tamArquivo; i++){
+            printf("%d posicao no ranque mundial - %s\n\n", jogadores[i].posicaoRank, jogadores[i].nome);
+            printf("\n------------------------------------\n\n");
+        }
+    fclose(file);
 }
 
 void listagemVitoria(){
@@ -468,6 +493,7 @@ void listagemVitoria(){
             printf("Vitorias: %d\n", jogadores[i].campeonato.vitorias);
             printf("\n------------------------------------\n\n");
         }
+    fclose(file);
 }
 
 void classificaoCampeonato(){ // usar BubbleSort por ser indexado, o que não afeta diretamente a ordem das outras funções
@@ -501,6 +527,7 @@ void classificaoCampeonato(){ // usar BubbleSort por ser indexado, o que não af
             printf("Derrotas: %d\n", jogadores[i].campeonato.derrotas);
             printf("\n------------------------------------\n\n");
         }
+    fclose(file);
 }
 
 void listagemPontuacaoMaior(){
@@ -724,7 +751,7 @@ int main() {
             printf("3. Alteracao de dados do jogador\n");
             printf("4. Atualizacao dos jogos e pontuacao\n");
             printf("5. Listagem ALFABELTICA dos jogadores\n");
-            printf("6. Listagem POR POSICAO dos jogadores\n");
+            printf("6. Listagem POR POSICAO NO RANQUE MUNDIAL dos jogadores\n");
             printf("7. Listagem POR VITORIA dos jogadores\n");
             printf("8. Classificacao do campeonato\n");
             printf("9. Listagem de jogadores com pontuacao MAIOR que certa pontuacao\n");
@@ -749,8 +776,12 @@ int main() {
                         inserirVitoriaEmpateDerrota(numJogadores);
                         break;
                     case 5:
+                        printf("\t\n\n*** ORDEM ALFABETICA ***\n\n");
+                        listagemAlfabetica();
                         break;
                     case 6:
+                        printf("\t\n\n*** RANQUE MUNDIAL ***\n\n");
+                        listagemRank();
                         break;
                     case 7:
                         printf("\t\n\n*** VITORIAS ***\n\n");
