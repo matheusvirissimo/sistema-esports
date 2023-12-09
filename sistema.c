@@ -442,7 +442,32 @@ void listagemRank(){
 }
 
 void listagemVitoria(){
-
+    FILE *file;
+    file = fopen("sistema.dat", "rb");
+        if(file == NULL){
+            printf("o arquivo nao foi aberto!!");
+        }
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
+    PLAYER jogadores[tamArquivo];
+    PLAYER auxiliar;
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+    int i = 0, j = 0;
+        for(i = 0; i < tamArquivo; i++){
+            for(j = 0; j < tamArquivo - 1; j++){
+                if(jogadores[j].campeonato.vitorias < jogadores[j+1].campeonato.vitorias){
+                    auxiliar = jogadores[j];
+                    jogadores[j] = jogadores[j+1];
+                    jogadores[j+1] = auxiliar;
+                }
+            }
+        }
+        for(i = 0; i < tamArquivo; i++){
+            printf("%d lugar - %s\n\n", i+1, jogadores[i].nome);
+            printf("Vitorias: %d\n", jogadores[i].campeonato.vitorias);
+            printf("\n------------------------------------\n\n");
+        }
 }
 
 void classificaoCampeonato(){ // usar BubbleSort por ser indexado, o que não afeta diretamente a ordem das outras funções
@@ -728,9 +753,11 @@ int main() {
                     case 6:
                         break;
                     case 7:
+                        printf("\t\n\n*** VITORIAS ***\n\n");
+                        listagemVitoria();
                         break;
                     case 8:
-                        printf("\t\n\n*** Classificacao do campeonato ***\n\n");
+                        printf("\t\n\n*** CLASSIFICACAO DO CAMPEONATO ***\n\n");
                         classificaoCampeonato();
                         break;
                     case 9:
