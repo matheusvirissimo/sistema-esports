@@ -334,6 +334,64 @@ void lerInformacoesUnicoJogador(PLAYER jogadores[], int tamArquivo, int numeroDo
     fclose(file);
 }
 
+void lerInformacoesDeterminadojogador(PLAYER jogadores[], int tamArquivo, int pontuacao){ 
+    FILE *file;
+    file = fopen("sistema.dat", "rb"); // rb == leitura e somente leitura
+        if(file == NULL){
+            printf("O arquivo nao foi aberto >:(");
+        }
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+    printf("\n------------------------------------\n"); 
+        for(int i = 0; i < tamArquivo; i++){ 
+
+            if(jogadores[i].campeonato.pontuacao > pontuacao){
+                printf("%d Jogador:\n\n", i + 1);
+
+                //Dados gerais
+                printf("Nome: %s\n", jogadores[i].nome);
+                printf("Data de Nascimento: %d/%d/%d\n", jogadores[i].dataNascimento.dia, jogadores[i].dataNascimento.mes, jogadores[i].dataNascimento.ano);
+                printf("CPF: %s\n", jogadores[i].cpf);
+                printf("Genero: %s\n", jogadores[i].genero);
+                printf("Estado Civil: %s\n\n", jogadores[i].estado_civil);
+
+                // Equipe
+                printf("Nome da Equipe: %s\n", jogadores[i].equipe.nome);
+                printf("Username da equipe: %s\n", jogadores[i].equipe.nicknameRedeSocial);
+                printf("Seguidores da equipe: %d\n\n", jogadores[i].equipe.seguidores);
+
+                // Patrocinador
+                printf("Patrocinador principal: %s\n\n", jogadores[i].patrocinador);
+
+                // Rede social
+                printf("Username no Instagram: @%s\n", jogadores[i].rede_social_username);
+                printf("Seguidores no Instagram: %d\n\n", jogadores[i].seguidores_rede_social);
+
+                // Hardware
+                printf("Modelo da maquina: %s\n", jogadores[i].hardware.modeloMaquinario);
+                printf("Processador: %s\n", jogadores[i].hardware.processador);
+                printf("Placa de video: %s\n", jogadores[i].hardware.placaDeVideo);
+                printf("Quantidade de memoria RAM: %dGB\n\n", jogadores[i].hardware.memoriaRAM);
+
+                // Campeonato
+                printf("Pontuacao no campeonato: %d\n", jogadores[i].campeonato.pontuacao);
+                printf("Vitorias: %d\n", jogadores[i].campeonato.vitorias);
+                printf("Empates: %d\n", jogadores[i].campeonato.empates);
+                printf("Derrotas: %d\n\n", jogadores[i].campeonato.derrotas);
+
+                // Titulos
+                printf("Quantidade de titulos: %d\n", jogadores[i].titulos);
+
+                // Posicao no rank
+                printf("Posicao no rank mundial: %d", jogadores[i].posicaoRank);
+
+                printf("\n------------------------------------\n");
+                
+                system("pause");
+            }
+        }
+    fclose(file);
+}
+
 void correcaoDadosJogador(PLAYER jogadores, int numJogadores){
     FILE *file;
     file = fopen("sistema.c", "wb");
@@ -437,6 +495,77 @@ FILE *file;
     return;
 }
 
+void listagemPontuacaoMaior(int numJogadores){
+    FILE *file;
+    file = fopen("sistema.dat", "rb");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto :(");
+        }
+    int pontuacaoMaior;
+    printf("Digite a pontuacao onde somente jogadores MAIORES a essa pontuacao apareceram: ");
+    scanf("%d", &pontuacaoMaior);
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+        printf("\n------------------------------------\n"); 
+        for(int i = 0; i < tamArquivo; i++){ 
+
+            if(jogadores[i].campeonato.pontuacao > pontuacaoMaior){
+                printf("%d Jogador:\n\n", i + 1);
+
+                //Dados gerais
+                printf("Nome: %s\n", jogadores[i].nome);
+                printf("Data de Nascimento: %d/%d/%d\n", jogadores[i].dataNascimento.dia, jogadores[i].dataNascimento.mes, jogadores[i].dataNascimento.ano);
+                printf("CPF: %s\n", jogadores[i].cpf);
+                printf("Genero: %s\n", jogadores[i].genero);
+                printf("Estado Civil: %s\n\n", jogadores[i].estado_civil);
+
+                // Equipe
+                printf("Nome da Equipe: %s\n", jogadores[i].equipe.nome);
+                printf("Username da equipe: %s\n", jogadores[i].equipe.nicknameRedeSocial);
+                printf("Seguidores da equipe: %d\n\n", jogadores[i].equipe.seguidores);
+
+                // Patrocinador
+                printf("Patrocinador principal: %s\n\n", jogadores[i].patrocinador);
+
+                // Rede social
+                printf("Username no Instagram: @%s\n", jogadores[i].rede_social_username);
+                printf("Seguidores no Instagram: %d\n\n", jogadores[i].seguidores_rede_social);
+
+                // Hardware
+                printf("Modelo da maquina: %s\n", jogadores[i].hardware.modeloMaquinario);
+                printf("Processador: %s\n", jogadores[i].hardware.processador);
+                printf("Placa de video: %s\n", jogadores[i].hardware.placaDeVideo);
+                printf("Quantidade de memoria RAM: %dGB\n\n", jogadores[i].hardware.memoriaRAM);
+
+                // Campeonato
+                printf("Pontuacao no campeonato: %d\n", jogadores[i].campeonato.pontuacao);
+                printf("Vitorias: %d\n", jogadores[i].campeonato.vitorias);
+                printf("Empates: %d\n", jogadores[i].campeonato.empates);
+                printf("Derrotas: %d\n\n", jogadores[i].campeonato.derrotas);
+
+                // Titulos
+                printf("Quantidade de titulos: %d\n", jogadores[i].titulos);
+
+                // Posicao no rank
+                printf("Posicao no rank mundial: %d", jogadores[i].posicaoRank);
+
+                printf("\n------------------------------------\n");
+                
+                system("pause");
+            }
+        }
+    fclose(file);
+
+
+}
+
+void listagemPontuacaoMenor(){
+
+}
+
 void mediaSeguidores(PLAYER jogadores[], int numJogadores){
     FILE *file;
     file = fopen("sistema.dat", "rb"); // não vamos escrever no arquivo, vamos ler os dados e depois transpor eles
@@ -457,7 +586,7 @@ void mediaSeguidores(PLAYER jogadores[], int numJogadores){
 }
 
 int main() {
-    int opcao, numJogadores = MAX_PLAYERS, rank;
+    int opcao, numJogadores = MAX_PLAYERS, rank, pontuacaoMaior, pontuacaoMenor;
     char nome[100];
     PLAYER jogadores[numJogadores];
     printf("\n\tSistema de competicao de E-Sports\n\n");
@@ -500,8 +629,10 @@ int main() {
                     case 8:
                         break;
                     case 9:
+                        listagemPontuacaoMaior(numJogadores);
                         break;
                     case 10:
+                        listagemPontuacaoMenor(numJogadores);
                         break;
                     case 11:
                         printf("\t\n\n*** BUSCA POR NOME ***\n\n");
