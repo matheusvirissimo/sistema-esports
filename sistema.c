@@ -495,14 +495,15 @@ FILE *file;
     return;
 }
 
-void listagemPontuacaoMaior(int numJogadores){
+void listagemPontuacaoMaior(){
     FILE *file;
     file = fopen("sistema.dat", "rb");
         if(file == NULL){
             printf("O arquivo nao foi aberto :(");
         }
-    int pontuacaoMaior;
-    printf("Digite a pontuacao onde somente jogadores MAIORES a essa pontuacao apareceram: ");
+    int pontuacaoMaior, flag = 0;
+    printf("\t\n\n*** LISTAGEM COM PONTUACAO A CIMA DE ***\n\n");
+    printf("Digite a pontuacao onde somente jogadores MAIORES a essa pontuacao aparecerao: ");
     scanf("%d", &pontuacaoMaior);
     fseek(file, 0, SEEK_END);
     int tamArquivo = ftell(file)/sizeof(PLAYER);
@@ -553,9 +554,12 @@ void listagemPontuacaoMaior(int numJogadores){
                 printf("Posicao no rank mundial: %d", jogadores[i].posicaoRank);
 
                 printf("\n------------------------------------\n");
-                
+                flag = 1;
                 system("pause");
             }
+        }
+        if(flag == 0){
+            printf("\nNao ha jogador com pontuacao maior que o valor digitado!\n");
         }
     fclose(file);
 
@@ -563,6 +567,72 @@ void listagemPontuacaoMaior(int numJogadores){
 }
 
 void listagemPontuacaoMenor(){
+        FILE *file;
+    file = fopen("sistema.dat", "rb");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto :(");
+        }
+    int pontuacaoMenor, flag = 0;
+    printf("\t\n\n*** LISTAGEM COM PONTUACAO ABAIXO DE ***\n\n");
+    printf("Digite a pontuacao onde somente jogadores MENORES a essa pontuacao aparecerao: ");
+    scanf("%d", &pontuacaoMenor);
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+        printf("\n------------------------------------\n"); 
+        for(int i = 0; i < tamArquivo; i++){ 
+
+            if(jogadores[i].campeonato.pontuacao < pontuacaoMenor){
+                printf("%d Jogador:\n\n", i + 1);
+
+                //Dados gerais
+                printf("Nome: %s\n", jogadores[i].nome);
+                printf("Data de Nascimento: %d/%d/%d\n", jogadores[i].dataNascimento.dia, jogadores[i].dataNascimento.mes, jogadores[i].dataNascimento.ano);
+                printf("CPF: %s\n", jogadores[i].cpf);
+                printf("Genero: %s\n", jogadores[i].genero);
+                printf("Estado Civil: %s\n\n", jogadores[i].estado_civil);
+
+                // Equipe
+                printf("Nome da Equipe: %s\n", jogadores[i].equipe.nome);
+                printf("Username da equipe: %s\n", jogadores[i].equipe.nicknameRedeSocial);
+                printf("Seguidores da equipe: %d\n\n", jogadores[i].equipe.seguidores);
+
+                // Patrocinador
+                printf("Patrocinador principal: %s\n\n", jogadores[i].patrocinador);
+
+                // Rede social
+                printf("Username no Instagram: @%s\n", jogadores[i].rede_social_username);
+                printf("Seguidores no Instagram: %d\n\n", jogadores[i].seguidores_rede_social);
+
+                // Hardware
+                printf("Modelo da maquina: %s\n", jogadores[i].hardware.modeloMaquinario);
+                printf("Processador: %s\n", jogadores[i].hardware.processador);
+                printf("Placa de video: %s\n", jogadores[i].hardware.placaDeVideo);
+                printf("Quantidade de memoria RAM: %dGB\n\n", jogadores[i].hardware.memoriaRAM);
+
+                // Campeonato
+                printf("Pontuacao no campeonato: %d\n", jogadores[i].campeonato.pontuacao);
+                printf("Vitorias: %d\n", jogadores[i].campeonato.vitorias);
+                printf("Empates: %d\n", jogadores[i].campeonato.empates);
+                printf("Derrotas: %d\n\n", jogadores[i].campeonato.derrotas);
+
+                // Titulos
+                printf("Quantidade de titulos: %d\n", jogadores[i].titulos);
+
+                // Posicao no rank
+                printf("Posicao no rank mundial: %d", jogadores[i].posicaoRank);
+
+                printf("\n------------------------------------\n");
+                flag = 1;
+                system("pause");
+            }
+        }
+        if(flag == 0){
+            printf("\nNenhum jogador possui pontuacao abaixo do valor digitado!\n");
+        }
+    fclose(file);
 
 }
 
@@ -629,10 +699,10 @@ int main() {
                     case 8:
                         break;
                     case 9:
-                        listagemPontuacaoMaior(numJogadores);
+                        listagemPontuacaoMaior();
                         break;
                     case 10:
-                        listagemPontuacaoMenor(numJogadores);
+                        listagemPontuacaoMenor();
                         break;
                     case 11:
                         printf("\t\n\n*** BUSCA POR NOME ***\n\n");
