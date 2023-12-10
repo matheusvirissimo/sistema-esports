@@ -51,29 +51,28 @@ typedef struct Player{
 
 // FUNÇÕES BASES
 
-void escreverBinario(PLAYER jogadores[], int numJogadores, int qtdJogadores){ 
+void escreverBinario(PLAYER jogadores[], int qtdJogadores){ 
     FILE *file;
-    file = fopen("sistema.dat", "ab+"); // queremos escrever jogadores além dos que já temos, por isso AB+
+    file = fopen("sistema.dat", "ab"); // queremos escrever jogadores além dos que já temos, por isso AB+
     if(file == NULL){
         printf("O arquivo não foi aberto ;(");
     }
-    int teste = sizeof(PLAYER)*30 + (qtdJogadores--);
-    int cadastro = ftell(file)/teste;
-    fseek(file, teste, SEEK_SET);
-    fread(jogadores, sizeof(PLAYER), numJogadores, file);
     int qtsRegEscritos = fwrite(jogadores, sizeof(PLAYER), qtdJogadores, file);
     printf("\nFoi escrito %d registro(s) de jogador(es)!\n", qtsRegEscritos);
     fclose(file);
 }
 
-void lerBinario(PLAYER jogadores[], int numJogadores){
+void lerBinario(PLAYER jogadores[]){
     FILE *file;
     file = fopen("sistema.dat", "rb");
     if(file == NULL){
         printf("O arquivo não foi aberto ;(");
     }
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER);
+    rewind(file);
     int qtdRegLidos;
-    qtdRegLidos = fread(jogadores, sizeof(PLAYER), numJogadores, file); 
+    qtdRegLidos = fread(jogadores, sizeof(PLAYER), tamArquivo, file); 
     printf("\nForam lidos %d registro(s) de jogador(es)!\n", qtdRegLidos);
     fclose(file);
     return;
@@ -100,10 +99,10 @@ int buscaBinaria(int vetor[], int chave, int INI, int FIM){
 
 // FUNÇÕES PROGRAMA
 
-void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
+void cadastrarJogador(PLAYER jogadores[]) {
     int cont = 0, qtdJogadores;
     printf("\t\n\n*** CADASTRO DE JOGADORES ***\n\n");
-    printf("Digite quantos jogadores você deseja cadastrar: ");
+    printf("Digite quantos jogadores voce deseja cadastrar: ");
     scanf("%d", &qtdJogadores);
         for(int i = 0; i < qtdJogadores; i++){
             // Nome
@@ -207,12 +206,12 @@ void cadastrarJogador(PLAYER jogadores[], int numJogadores) {
             printf("\nO %d jogador foi cadastrado\n\n", i+1);
             cont++; 
 
-            escreverBinario(jogadores, numJogadores, qtdJogadores);
+            escreverBinario(jogadores, qtdJogadores);
         }
     printf("Foram cadastrados %d jogadores!\n\n", cont);
 }
 
-void lerInformacoesJogadorES(PLAYER jogadores[], int numJogadores){
+void lerInformacoesJogadorES(PLAYER jogadores[]){
     FILE *file;
     file = fopen("sistema.dat", "rb"); // rb == leitura e somente leitura
         if(file == NULL){
@@ -224,7 +223,7 @@ void lerInformacoesJogadorES(PLAYER jogadores[], int numJogadores){
     // tem que ser com 0, não pode ser 0*PLAYER(jogadores) porque não vai :(
     fread(jogadores, sizeof(PLAYER), tamArquivo, file);
     printf("\n------------------------------------\n"); 
-        for(int i = 0; i < numJogadores; i++){ // tem que mudar o FOR
+        for(int i = 0; i < tamArquivo; i++){ // tem que mudar o FOR
             if(jogadores[i].nome[0] == '\0'){
                 // Sai do FOR se o próximo nome for vazio
                 break;
@@ -392,7 +391,7 @@ void lerInformacoesDeterminadojogador(PLAYER jogadores[], int tamArquivo, int po
     fclose(file);
 }
 
-void correcaoDadosJogador(PLAYER jogadores, int numJogadores){
+void alterarNome(PLAYER jogadores){
     FILE *file;
     file = fopen("sistema.c", "wb");
         if(file == NULL){
@@ -401,7 +400,7 @@ void correcaoDadosJogador(PLAYER jogadores, int numJogadores){
     
 }
 
-void inserirVitoriaEmpateDerrota(int numJogadores) { // BUGADO
+void inserirVitoriaEmpateDerrota() { // BUGADO
     FILE *file;
     file = fopen("sistema.dat", "rb+"); // faz a leitura e escreve no fim
     if (file == NULL) {
@@ -415,7 +414,7 @@ void inserirVitoriaEmpateDerrota(int numJogadores) { // BUGADO
     PLAYER jogadores[tamArquivo];
     fread(jogadores, sizeof(PLAYER), tamArquivo, file);
 
-    printf("\n\nVoce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
     printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
     printf("Digite a numeracao do jogador a ser alterado: ");
     scanf("%d", &posicaoJogador);
@@ -429,10 +428,10 @@ void inserirVitoriaEmpateDerrota(int numJogadores) { // BUGADO
     scanf("%d", &vetorAux[0].campeonato.derrotas);
 
     vetorAux[0].campeonato.pontuacao = vetorAux[0].campeonato.vitorias * 3 + vetorAux[0].campeonato.empates;
-
+    fseek(file, posicaoJogador * sizeof(PLAYER), SEEK_SET);
     fwrite(vetorAux, sizeof(PLAYER), 1, file);
     fclose(file);
-    }
+}
 
 void listagemAlfabetica(){
     FILE *file;
@@ -564,7 +563,6 @@ void listagemPontuacaoMaior(){
             printf("O arquivo nao foi aberto :(");
         }
     int pontuacaoMaior, flag = 0;
-    printf("\t\n\n*** LISTAGEM COM PONTUACAO A CIMA DE ***\n\n");
     printf("Digite a pontuacao onde somente jogadores MAIORES a essa pontuacao aparecerao: ");
     scanf("%d", &pontuacaoMaior);
     fseek(file, 0, SEEK_END);
@@ -635,7 +633,6 @@ void listagemPontuacaoMenor(){
             printf("O arquivo nao foi aberto :(");
         }
     int pontuacaoMenor, flag = 0;
-    printf("\t\n\n*** LISTAGEM COM PONTUACAO ABAIXO DE ***\n\n");
     printf("Digite a pontuacao onde somente jogadores MENORES a essa pontuacao aparecerao: ");
     scanf("%d", &pontuacaoMenor);
     fseek(file, 0, SEEK_END);
@@ -710,14 +707,17 @@ void buscaPorNome(char nome[100]){
     PLAYER jogadores[tamArquivo];
     fseek(file, 0, SEEK_SET); // volta o ponteiro no inicio para sua manipulação
     fread(jogadores, sizeof(PLAYER), tamArquivo, file);
-    int i = 0;
+    int i = 0, flag = 0;
         for(i = 0; i < tamArquivo; i++){
-            if(strcmp(jogadores[i].nome, nome) == 0){
+            if(stricmp(jogadores[i].nome, nome) == 0){
                 int numeroDoJogador = i;
                 lerInformacoesUnicoJogador(jogadores, tamArquivo, numeroDoJogador);
-            }else{
-                printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
+                flag = 1;
+                break;
             }
+        }
+        if(flag == 0){
+            printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
         }
     fclose(file);
     return;
@@ -734,18 +734,20 @@ FILE *file;
     PLAYER jogadores[tamArquivo];
     fseek(file, 0, SEEK_SET); // volta o ponteiro no inicio para sua manipulação
     fread(jogadores, sizeof(PLAYER), tamArquivo, file);
-    int i = 0;
+    int i = 0, flag = 0;
         for(i = 0; i < tamArquivo; i++){
             if(jogadores[i].posicaoRank == rank){
                 int numeroDoJogador = i;
                 lerInformacoesUnicoJogador(jogadores, tamArquivo, numeroDoJogador);
-                break; 
-            }else{
-                printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
-            }
+                flag = 1;
+                break;
+        }
+        if(flag == 0){
+            printf("\n\nEsse jogador nao existe em nosso banco de dados!\n\n");
         }
     fclose(file);
     return;
+    }
 }
 
 void mediaSeguidores(PLAYER jogadores[]){
@@ -768,7 +770,7 @@ void mediaSeguidores(PLAYER jogadores[]){
 }
 
 int main() {
-    int opcao, numJogadores = MAX_PLAYERS, rank, pontuacaoMaior, pontuacaoMenor;
+    int opcao, segundaOpcao, numJogadores = MAX_PLAYERS, rank;
     char nome[100];
     PLAYER jogadores[numJogadores];
     printf("\n\tSistema de competicao de E-Sports\n\n");
@@ -791,15 +793,74 @@ int main() {
             scanf("%d", &opcao);
                 switch (opcao) {
                     case 1:
-                        cadastrarJogador(jogadores, numJogadores);
+                        cadastrarJogador(jogadores);
                         break;
                     case 2:
-                        lerInformacoesJogadorES(jogadores, numJogadores);
-                        lerBinario(jogadores, numJogadores);
+                        lerInformacoesJogadorES(jogadores);
+                        lerBinario(jogadores);
                         break;
                     case 3:
+                        /*printf("\t\n\n*** ALTERACAO DE DADOS DO JOGADOR ***\n\n");
+                        printf("\n1. Nome\n");
+                        printf("2. Data de nascimenot\n");
+                        printf("3. CPF\n");
+                        printf("4. Genero\n");
+                        printf("5. Estado civil\n");
+                        printf("6. Equipe\n");
+                        printf("7. Patrocinador\n");
+                        printf("8. Rede social\n");
+                        printf("9. Hardware\n");
+                        printf("10. Campeonato\n");
+                        printf("11. Titulos\n");
+                        printf("12. Posicao no ranque mundial\n");
+                        printf("13. Sair\n");
+                        printf("Digite a opcao desejada para alterar: ");
+                        scanf("%d", &segundaOpcao);
+                            switch (segundaOpcao){
+                            case 1:
+                                alterarNome();
+                                break;
+                            case 2:
+                                alterarNascimento();
+                                break;
+                            case 3:
+                                alterarCPF();
+                                break;
+                            case 4:
+                                alterarGenero();
+                                break;
+                            case 5:
+                                alterarEstadoCivil();
+                                break;
+                            case 6:
+                                alterarEquipe();
+                                break;
+                            case 7:
+                                alterarPatrocinador();
+                                break;
+                            case 8:
+                                alterarRedeSocial();
+                                break;
+                            case 9:
+                                alterarHardware();
+                                break;
+                            case 10:
+                                alterarCampeonato();
+                                break;
+                            case 11:
+                                alterarTitulos();
+                                break;
+                            case 12:
+                                alterarRank();
+                                break;
+                            case 13:
+                                return 0;
+                            default:
+                                printf("\nDigite uma opcao valida!\n");
+                            }*/
                         break;
                     case 4:
+                        printf("\t\n\n*** ALTERACAO DE VITORIAS, EMPATES E DERROTAS ***\n\n");
                         inserirVitoriaEmpateDerrota(numJogadores);
                         break;
                     case 5:
@@ -819,9 +880,11 @@ int main() {
                         classificaoCampeonato();
                         break;
                     case 9:
+                        printf("\t\n\n*** LISTAGEM COM PONTUACAO A CIMA DE ***\n\n");
                         listagemPontuacaoMaior();
                         break;
                     case 10:
+                        printf("\t\n\n*** LISTAGEM COM PONTUACAO ABAIXO DE ***\n\n");
                         listagemPontuacaoMenor();
                         break;
                     case 11:
