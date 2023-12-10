@@ -391,16 +391,348 @@ void lerInformacoesDeterminadojogador(PLAYER jogadores[], int tamArquivo, int po
     fclose(file);
 }
 
-void alterarNome(PLAYER jogadores){
+void alterarNome(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nNovo nome: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].nome);
+    fflush(stdin);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarNascimento(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nDigite a sua nova data de nascimento\n");
+    printf("O dia: ");
+    scanf("%d", &jogadores[posicaoJogador].dataNascimento.dia);
+    printf("O mes (em numero): ");
+    scanf("%d", &jogadores[posicaoJogador].dataNascimento.mes);
+    printf("O ano: "); 
+    scanf("%d", &jogadores[posicaoJogador].dataNascimento.ano);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarCPF(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nCPF (11 digitos): ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].cpf);
+    fflush(stdin);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarGenero(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nNovo genero: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].genero);
+    fflush(stdin);
+    
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarEstadoCivil(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nEstado civil novo: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].estado_civil);
+    fflush(stdin);
+
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarEquipe(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\n NOVO nome da equipe: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].equipe.nome);
+    fflush(stdin);
+    printf("O NOVO username DA EQUIPE no Instagram: @");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].equipe.nicknameRedeSocial);
+    fflush(stdin);
+    printf("NOVA quantidade de seguidores DA EQUIPE no Instagram: ");
+    fflush(stdin);
+    scanf("%d", &jogadores[posicaoJogador].equipe.seguidores);
+    fflush(stdin);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarPatrocinador(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nO novo principal patrocinador deste jogador: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].patrocinador);
+    fflush(stdin);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarRedeSocial(){
     FILE *file;
     file = fopen("sistema.c", "wb");
         if(file == NULL){
             printf("O arquivo nao foi aberto nooooooo :(");
         }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
     
+    printf("\nNOVO Nome de usuario do Instagram do jogador: @");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].rede_social_username);
+    fflush(stdin);
+    printf("Digite a NOVA quantidade de seguidores nessa mesma rede social: ");
+    scanf("%d", &jogadores[posicaoJogador].seguidores_rede_social);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
 }
 
-void inserirVitoriaEmpateDerrota() { // BUGADO
+void alterarHardware(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nQual o modelo do computador/notebook usado: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].hardware.modeloMaquinario);
+    fflush(stdin);
+    printf("O seu processador: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].hardware.processador);
+    fflush(stdin);
+    printf("A sua placa de video: ");
+    fflush(stdin);
+    gets(jogadores[posicaoJogador].hardware.placaDeVideo);
+    fflush(stdin);
+    printf("A quantidade de Memoria RAM(8/16/24/32/64): ");
+    scanf("%d", &jogadores[posicaoJogador].hardware.memoriaRAM);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarTitulos(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\nDigite a nova quantidade de titulos: ");
+    scanf("%d", &jogadores[posicaoJogador].titulos);
+
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void alterarRank(){
+    FILE *file;
+    file = fopen("sistema.c", "rb+");
+        if(file == NULL){
+            printf("O arquivo nao foi aberto nooooooo :(");
+        }
+    int posicaoJogador;
+    fseek(file, 0, SEEK_END);
+    int tamArquivo = ftell(file)/sizeof(PLAYER); 
+    rewind(file); // == fseek(file, 0, seek_set)
+    PLAYER jogadores[tamArquivo];
+    fread(jogadores, sizeof(PLAYER), tamArquivo, file);
+
+    printf("Voce deve selecionar a numeracao do jogador conforme a sua inscricao na lista\n");
+    printf("Por exemplo: o jogador MAVINCAS foi o 1 jogador a ser inscrito, logo, se voce deseja atualizar ele, digite 1\n");
+    printf("Digite a numeracao do jogador a ser alterado: ");
+    scanf("%d", &posicaoJogador);
+    posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
+    
+    printf("\n\nDigite o novo ranque: ");
+    scanf("%d", &jogadores[posicaoJogador].posicaoRank);
+
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
+    fclose(file);
+}
+
+void inserirVitoriaEmpateDerrota() { 
     FILE *file;
     file = fopen("sistema.dat", "rb+"); // faz a leitura e escreve no fim
     if (file == NULL) {
@@ -419,17 +751,17 @@ void inserirVitoriaEmpateDerrota() { // BUGADO
     printf("Digite a numeracao do jogador a ser alterado: ");
     scanf("%d", &posicaoJogador);
     posicaoJogador--; // é computação, a numeração não começa no 1, mas sim no 0. 
-    PLAYER vetorAux[1];
-    printf("Digite as VITORIAS atualizadas: ");
-    scanf("%d", &vetorAux[0].campeonato.vitorias);
+    
+    printf("\nDigite as VITORIAS atualizadas: ");
+    scanf("%d", &jogadores[posicaoJogador].campeonato.vitorias);
     printf("Digite os EMPATES atualizados: ");
-    scanf("%d", &vetorAux[0].campeonato.empates);
+    scanf("%d", &jogadores[posicaoJogador].campeonato.empates);
     printf("Digite as DERROTAS atualizadas: ");
-    scanf("%d", &vetorAux[0].campeonato.derrotas);
+    scanf("%d", &jogadores[posicaoJogador].campeonato.derrotas);
 
-    vetorAux[0].campeonato.pontuacao = vetorAux[0].campeonato.vitorias * 3 + vetorAux[0].campeonato.empates;
-    fseek(file, posicaoJogador * sizeof(PLAYER), SEEK_SET);
-    fwrite(vetorAux, sizeof(PLAYER), 1, file);
+    jogadores[posicaoJogador].campeonato.pontuacao = jogadores[posicaoJogador].campeonato.vitorias * 3 + jogadores[posicaoJogador].campeonato.empates;
+    fseek(file, 0, SEEK_SET);
+    fwrite(jogadores, sizeof(PLAYER), tamArquivo, file);
     fclose(file);
 }
 
@@ -791,6 +1123,7 @@ int main() {
             printf("14. Sair\n");
             printf("Escolha a opcao: ");
             scanf("%d", &opcao);
+            printf("\n\n");
                 switch (opcao) {
                     case 1:
                         cadastrarJogador(jogadores);
@@ -800,9 +1133,9 @@ int main() {
                         lerBinario(jogadores);
                         break;
                     case 3:
-                        /*printf("\t\n\n*** ALTERACAO DE DADOS DO JOGADOR ***\n\n");
-                        printf("\n1. Nome\n");
-                        printf("2. Data de nascimenot\n");
+                        printf("\t\n*** ALTERACAO DE DADOS DO JOGADOR ***\n\n");
+                        printf("1. Nome\n");
+                        printf("2. Data de nascimento\n");
                         printf("3. CPF\n");
                         printf("4. Genero\n");
                         printf("5. Estado civil\n");
@@ -814,8 +1147,9 @@ int main() {
                         printf("11. Titulos\n");
                         printf("12. Posicao no ranque mundial\n");
                         printf("13. Sair\n");
-                        printf("Digite a opcao desejada para alterar: ");
+                        printf("Digite O NUMERO da opcao desejada para alterar: ");
                         scanf("%d", &segundaOpcao);
+                        printf("\n\n");
                             switch (segundaOpcao){
                             case 1:
                                 alterarNome();
@@ -845,7 +1179,7 @@ int main() {
                                 alterarHardware();
                                 break;
                             case 10:
-                                alterarCampeonato();
+                                inserirVitoriaEmpateDerrota();
                                 break;
                             case 11:
                                 alterarTitulos();
@@ -857,38 +1191,38 @@ int main() {
                                 return 0;
                             default:
                                 printf("\nDigite uma opcao valida!\n");
-                            }*/
+                            }
                         break;
                     case 4:
-                        printf("\t\n\n*** ALTERACAO DE VITORIAS, EMPATES E DERROTAS ***\n\n");
-                        inserirVitoriaEmpateDerrota(numJogadores);
+                        printf("\t\n*** ALTERACAO DE VITORIAS, EMPATES E DERROTAS ***\n\n");
+                        inserirVitoriaEmpateDerrota();
                         break;
                     case 5:
-                        printf("\t\n\n*** ORDEM ALFABETICA ***\n\n");
+                        printf("\t\n*** ORDEM ALFABETICA ***\n\n");
                         listagemAlfabetica();
                         break;
                     case 6:
-                        printf("\t\n\n*** RANQUE MUNDIAL ***\n\n");
+                        printf("\t\n*** RANQUE MUNDIAL ***\n\n");
                         listagemRank();
                         break;
                     case 7:
-                        printf("\t\n\n*** VITORIAS ***\n\n");
+                        printf("\t\n*** VITORIAS ***\n\n");
                         listagemVitoria();
                         break;
                     case 8:
-                        printf("\t\n\n*** CLASSIFICACAO DO CAMPEONATO ***\n\n");
+                        printf("\t\n*** CLASSIFICACAO DO CAMPEONATO ***\n\n");
                         classificaoCampeonato();
                         break;
                     case 9:
-                        printf("\t\n\n*** LISTAGEM COM PONTUACAO A CIMA DE ***\n\n");
+                        printf("\t\n*** LISTAGEM COM PONTUACAO A CIMA DE ***\n\n");
                         listagemPontuacaoMaior();
                         break;
                     case 10:
-                        printf("\t\n\n*** LISTAGEM COM PONTUACAO ABAIXO DE ***\n\n");
+                        printf("\t\n*** LISTAGEM COM PONTUACAO ABAIXO DE ***\n\n");
                         listagemPontuacaoMenor();
                         break;
                     case 11:
-                        printf("\t\n\n*** BUSCA POR NOME ***\n\n");
+                        printf("\t\n*** BUSCA POR NOME ***\n\n");
                         printf("Digite o nome do jogador igual a como esta listado: ");
                         fflush(stdin);
                         gets(nome);
@@ -896,13 +1230,13 @@ int main() {
                         buscaPorNome(nome);
                         break;
                     case 12:
-                        printf("\t\n\n*** BUSCA POR RANK ***\n\n");
+                        printf("\t\n*** BUSCA POR RANK ***\n\n");
                         printf("Digite o ranque do jogador que voce busca: ");
                         scanf("%d", &rank);
                         buscaPorRank(rank);
                         break;
                     case 13:
-                        printf("\t\n\n*** MEDIA DE SEGUIDORES ***\n\n");
+                        printf("\t\n*** MEDIA DE SEGUIDORES ***\n\n");
                         mediaSeguidores(jogadores);
                         break;
                     case 14:
